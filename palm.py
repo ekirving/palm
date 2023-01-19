@@ -236,7 +236,7 @@ def _T_inference(statistics,args):
 			mmults = mults[msig]
 			mpvals = np.reshape(pvals[msig,j],(Lj,1))
 			mtraitNames = [traitNames[j]]	
-			mstats = mcoeffs,mbetas,mses,mx0,mmults,mpvals,mtraitNames
+			mstats = mcoeffs,mbetas,mmults,mpvals,mtraitNames
 			momega = _opt_omega(mstats) 
 			margOmegaJK[j,b] = momega			
 	ses = np.std(omegaJK,axis=1)
