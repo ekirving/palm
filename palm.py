@@ -104,13 +104,11 @@ def _parse_loci_stats(args):
 			if np.logical_not(np.any(stats.chi2.sf((np.array(loc_betas)/np.array(loc_ses))**2,df=1) < args.maxp)):
 				continue
 
-		try:	
-			if args.quad != None:
-				coeff = np.load(locusDir + args.quad + '.npy')	
-			else:
-				coeff = np.load(locusDir + 'bp%s.quad_fit.npy'%(bp))
-		except:
-			continue
+		if args.quad != None:
+			coeff = np.load(locusDir + args.quad + '.npy')
+		else:
+			coeff = np.load(locusDir + 'bp%s.quad_fit.npy'%(bp))
+
 		coeffs.append(coeff)
 		betas.append(loc_betas)
 		mults.append(1/mult)
