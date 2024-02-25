@@ -151,9 +151,12 @@ def _out(omega,ses,L_byTrait,L,out,marg=None,T=None):
 		np.save(out+'.T.npy',T)
 	return
 
-def _bootstrap(stats):
+def _bootstrap(stats, maxp):
 	coeffs,betas,mults,pvals,traitNames = stats
 	I = np.random.choice(coeffs.shape[0],coeffs.shape[0],replace=True)
+	while not np.array([(pvals[I, j] < maxp).any() for j in range(pvals.shape[1])]).all():
+		# we can only bootstrap if at least one SNP is significant in each trait
+		I = np.random.choice(coeffs.shape[0],coeffs.shape[0],replace=True)
 	return coeffs[I,:],betas[I,:],mults[I],pvals[I,:],traitNames
 
 def _opt_omega(stats):
@@ -188,7 +191,7 @@ def _inference(statistics,args):
 	
 	omegaJK = np.zeros((J,B))
 	for b in range(B):	
-		statsDK = _bootstrap(statistics) 
+		statsDK = _bootstrap(statistics, args.maxp)
 		omegaJK_b = _opt_omega(statsDK)	
 		omegaJK[:,b] = omegaJK_b 
 	ses = np.std(omegaJK,axis=1)
@@ -219,7 +222,7 @@ def _T_inference(statistics,args):
 	omegaJK = np.zeros((J,B))
 	margOmegaJK = np.zeros((J,B))
 	for b in range(B):	
-		statsDK = _bootstrap(statistics) 
+		statsDK = _bootstrap(statistics, args.maxp)
 		omegaJK_b = _opt_omega(statsDK)	
 		omegaJK[:,b] = omegaJK_b 
 
