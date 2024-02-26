@@ -98,10 +98,12 @@ def _parse_loci_stats(args):
 			loc_ses = list(np.zeros(len(betaColumns)))
 		if np.size(loc_pvals) == 0:
 			loc_pvals = list(np.zeros(len(betaColumns)))
+		if np.any(np.isnan(loc_betas)):
+			raise ValueError(f"beta is NaN for {variant}")
+		if np.any(np.isnan(loc_ses)):
+			raise ValueError(f"SE is NaN for {variant}")
 		if args.maxp < 1:
-			if np.any(np.isnan(loc_betas)):
-				continue	
-			if np.logical_not(np.any(stats.chi2.sf((np.array(loc_betas)/np.array(loc_ses))**2,df=1) < args.maxp)):
+			if np.logical_not(np.any(np.array(loc_pvals) < args.maxp)):
 				continue
 
 		if args.quad != None:
