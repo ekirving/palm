@@ -16,7 +16,7 @@ def _args(super_parser,main=False):
 		parser = super_parser
 	# mandatory inputs:
 	required = parser.add_argument_group('required arguments')
-	required.add_argument('--traitDir',type=str,help='A directory containing only directories, each representing a causal locus')
+	required.add_argument('--traitDir',type=str,help='A directory containing only directories, each representing a causal locus',default='')
 	required.add_argument('--metadata',type=str,help='A dataframe holding attributes for each SNP') 
 	parser.add_argument('--traits',type=str,help='Traits to analyze, separated by commas; only specify if metadata has betas indexed by trait(s) (e.g., joint analysis of traits)',default='NULL')
 	# options:
@@ -107,7 +107,7 @@ def _parse_loci_stats(args):
 				continue
 
 		if args.quad != None:
-			coeff = np.load(locusDir + args.quad + '.npy')
+			coeff = np.load(args.quad.format(**dfRow))
 		else:
 			coeff = np.load(locusDir + 'bp%s.quad_fit.npy'%(bp))
 
