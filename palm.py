@@ -8,6 +8,9 @@ import scipy.stats as stats
 import progressbar
 from numba import njit
 
+# raise warnings as exceptions
+np.seterr(all='raise')
+
 def _args(super_parser,main=False):
 	if not main:
 		parser = super_parser.add_parser('trait',description=
