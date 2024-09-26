@@ -172,11 +172,18 @@ def _opt_omega(stats):
 	A = np.zeros((J,J))
 	b = np.zeros(J)
 	
+	# ignore underflow errors when a p-value is extremely low (convert underflow to zero)
+	old_settings = np.seterr(under='ignore')
+
 	for l in range(L):
 		A += 2 * mults[l] * coeffs[l,0] * np.outer(betas[l,:],betas[l,:])
 		b += -mults[l] * coeffs[l,1] * betas[l,:]
 	Ainv = np.linalg.inv(A)
 	omega = np.dot(Ainv,b)
+
+	# restore old settings
+	np.seterr(**old_settings)
+
 	return omega	
 
 def _nloci(stats,args):
